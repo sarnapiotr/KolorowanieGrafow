@@ -1,74 +1,140 @@
 #include <iostream>
+#include <vector>
 
-class Graph {
-private:
-    int vertexCount;
-    int edgeCount;
-    int** graphMatrix;
+void chooseGraphMatrix(int**& graphMatrix, int& vertexCount) {
+    std::cout << "Wybierz graf do pokolorowania: \n";
+    std::cout << "1. Graf 3-wierzcholkowy\n";
+    std::cout << "2. Graf 5-wierzcholkowy\n";
+    std::cout << "3. Graf 10-wierzcholkowy\n";
 
-public:
-    Graph(int vertexCount, int edgeCount) : vertexCount(vertexCount), edgeCount(edgeCount) {
-        graphMatrix = new int*[vertexCount];
-        for (int i = 0; i < vertexCount; i++) {
-            graphMatrix[i] = new int[vertexCount]();
+    int choice;
+    std::cin >> choice;
+    switch (choice) {
+    case 1:
+        vertexCount = 3;
+        graphMatrix = new int* [vertexCount] {
+            new int[vertexCount] {0, 1, 1},
+                new int[vertexCount] {1, 0, 1},
+                new int[vertexCount] {1, 1, 0}};
+        break;
+    case 2:
+        vertexCount = 5;
+        graphMatrix = new int* [vertexCount] {
+            new int[vertexCount] {0, 1, 1, 0, 0},
+                new int[vertexCount] {1, 0, 1, 1, 0},
+                new int[vertexCount] {1, 1, 0, 1, 1},
+                new int[vertexCount] {0, 1, 1, 0, 1},
+                new int[vertexCount] {0, 0, 1, 1, 0}};
+        break;
+    case 3:
+        vertexCount = 10;
+        graphMatrix = new int* [vertexCount] {
+            new int[vertexCount] {0, 1, 0, 0, 1, 0, 0, 0, 1, 0},
+                new int[vertexCount] {1, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+                new int[vertexCount] {0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
+                new int[vertexCount] {0, 0, 1, 0, 1, 1, 0, 0, 0, 0},
+                new int[vertexCount] {1, 0, 0, 1, 0, 0, 0, 1, 0, 0},
+                new int[vertexCount] {0, 0, 0, 1, 0, 0, 1, 0, 1, 0},
+                new int[vertexCount] {0, 1, 0, 0, 0, 1, 0, 1, 0, 0},
+                new int[vertexCount] {0, 0, 0, 0, 1, 0, 1, 0, 1, 1},
+                new int[vertexCount] {1, 0, 0, 0, 0, 1, 0, 1, 0, 0},
+                new int[vertexCount] {0, 0, 1, 0, 0, 0, 0, 1, 0, 0}};
+        break;
+    default:
+        std::cout << "Niepoprawny wybor\n";
+        return;
+    }
+}
+
+void printGraph(int**& graphMatrix, const int& vertexCount) {
+    for (int i = 0; i < vertexCount; i++) {
+        for (int j = 0; j < vertexCount; j++) {
+            std::cout << graphMatrix[i][j] << " ";
         }
+        std::cout << std::endl;
+    }
+}
 
-        int currentEdgeCount = 0;
+bool isSafe(int** graphMatrix, int vertexCount, const std::vector<int>& colors, int vertex, int color) {
+    for (int i = 0; i < vertexCount; i++) {
+        if (graphMatrix[vertex][i] == 1 && colors[i] == color) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool solveColoring(int** graphMatrix, int vertexCount, std::vector<int>& colors, int vertex, int maxColors) {
+    if (vertex == vertexCount) {
+        return true;
     }
 
-    void printGraph() {
-        for (int i = 0; i < vertexCount; i++) {
-            for (int j = 0; j < vertexCount; j++) {
-                std::cout << graphMatrix[i][j] << " ";
+    for (int color = 1; color <= maxColors; color++) {
+        if (isSafe(graphMatrix, vertexCount, colors, vertex, color)) {
+            colors[vertex] = color;
+            if (solveColoring(graphMatrix, vertexCount, colors, vertex + 1, maxColors)) {
+                return true;
             }
-            std::cout << std::endl;
+            colors[vertex] = 0;
         }
     }
+    return false;
+}
 
-    ~Graph() {
-        for (int i = 0; i < vertexCount; i++) {
-            delete[] graphMatrix[i];
+void exactGraphColoring(int** graphMatrix, int vertexCount) {
+    std::vector<int> colors(vertexCount, 0);
+
+    for (int maxColors = 1; maxColors <= vertexCount; maxColors++) {
+        if (solveColoring(graphMatrix, vertexCount, colors, 0, maxColors)) {
+            std::cout << "Minimalna liczba kolorow: " << maxColors << "\n";
+            for (int i = 0; i < vertexCount; i++) {
+                std::cout << "Wierzcholek " << i << ": Kolor " << colors[i] << "\n";
+            }
+            return;
         }
-        delete[] graphMatrix;
     }
-};
+}
+
+void LFgraphColoring(int**& graphMatrix, const int& vertexCount) {
+
+}
 
 int main()
 {
     std::cout << "Problem kolorowania grafow\n";
+
+    int** graphMatrix{nullptr};
+    int vertexCount{0};
+
+    chooseGraphMatrix(graphMatrix, vertexCount);
+    printGraph(graphMatrix, vertexCount);
+
     std::cout << "1. Algorytm dokladny\n";
     std::cout << "2. Algorytm LF\n";
     std::cout << "Wybierz algorytm: \n";
-
     int choice;
     std::cin >> choice;
 
-    int vertexCount;
-    int edgeCount;
-
     if (choice == 1) {
-        std::cout << "Podaj ilosc wierzcholkow: \n";
-        std::cin >> vertexCount;
-        std::cout << "Podaj ilosc krawedzi: \n";
-        std::cin >> edgeCount;
-
-        int edgeMax{(vertexCount * (vertexCount - 1)) / 2};
-        if (vertexCount < 1 || edgeCount < 1 || edgeCount > edgeMax) {
-            std::cout << "Niepoprawne dane wejsciowe\n";
-            return -1;
-        }
-
-        Graph graph = Graph(vertexCount, edgeCount);
-        graph.printGraph();
-
+        std::vector<int> colors(vertexCount, 0);
+        exactGraphColoring(graphMatrix, vertexCount);
     }
     else if (choice == 2) {
-
+        //LFgraphColoring();
     }
     else {
         std::cout << "Niepoprawny wybor\n";
+        for (int i = 0; i < vertexCount; i++) {
+            delete[] graphMatrix[i];
+        }
+        delete[] graphMatrix;
         return -1;
     }
+
+    for (int i = 0; i < vertexCount; i++) {
+        delete[] graphMatrix[i];
+    }
+    delete[] graphMatrix;
 
     return 0;
 }
