@@ -190,3 +190,15 @@ int main()
 
     return 0;
 }
+
+//graphMatrix = new int* [vertexCount] {
+//    new int[vertexCount] {0, 1, 0, 0, 0, 1, 0, 0, 0, 0},
+//    new int[vertexCount] {1, 0, 1, 0, 0, 0, 1, 0, 0, 0},
+//    new int[vertexCount] {0, 1, 0, 1, 0, 0, 0, 1, 0, 0},
+//    new int[vertexCount] {0, 0, 1, 0, 1, 0, 0, 0, 1, 0},
+//    new int[vertexCount] {0, 0, 0, 1, 0, 1, 0, 0, 0, 1},
+//    new int[vertexCount] {1, 0, 0, 0, 1, 0, 0, 0, 0, 0},
+//    new int[vertexCount] {0, 1, 0, 0, 0, 0, 0, 0, 0, 0},
+//    new int[vertexCount] {0, 0, 1, 0, 0, 0, 0, 0, 0, 0},
+//    new int[vertexCount] {0, 0, 0, 1, 0, 0, 0, 0, 0, 0},
+//    new int[vertexCount] {0, 0, 0, 0, 1, 0, 0, 0, 0, 0}};
