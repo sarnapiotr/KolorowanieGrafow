@@ -1,3 +1,5 @@
 https://inf.ug.edu.pl/~hanna/grafy/14_kolorowanie.pdf
 https://mattomatti.com/pl/a0298
 https://www.if.pw.edu.pl/~agatka/moodle/obiekty.html
+https://eduinf.waw.pl/inf/alg/001_search/0142.php
+https://ufkapano.github.io/algorytmy/lekcja14/color.html
